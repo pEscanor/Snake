@@ -1,281 +1,280 @@
 #ifndef GAME_HPP
 #define GAME_HPP
+
 #include "Snake_Player.h"
 #include "Menu.h"
 #include "Futter.h"
-#include <conio.h>
+#include <conio.h> // Include necessary header files
 
 void warten()
 {
-	std::cin.sync();
-	std::cin.clear();
+    std::cin.sync();
+    std::cin.clear();
 }
 
 void StartGame()
 {
-	clrscr(BG_BLACK);
-	ic::shorties::textcolor(FG_WHITE);
+    clrscr(BG_BLACK); // Clear the screen with a black background
+    ic::shorties::textcolor(FG_WHITE); // Set text color to white
 
-	short GMinWidth = 2;
-	short GMaxWidth = 50;
-	short GMinHeigth = 2;
-	short GMaxHeigth = 15;
+    // Define game and snake dimensions
+    short GMinWidth = 2;
+    short GMaxWidth = 50;
+    short GMinHeigth = 2;
+    short GMaxHeigth = 15;
 
-	short SMinWidth = 2;
-	short SMaxWidth = 20;
-	short SMaxHeigth = 5;
+    short SMinWidth = 2;
+    short SMaxWidth = 20;
+    short SMaxHeigth = 5;
 
-	short points = 0;
+    short points = 0;
 
-	GameMenu FensterMenu(GMinWidth, GMinHeigth, GMaxWidth,
-						 GMaxHeigth, SMinWidth, SMaxWidth, SMaxHeigth);
-	FensterMenu.DrawGameMenu();
-	FensterMenu.DrawStatusMenu();
+    // Create game menu object
+    GameMenu FensterMenu(GMinWidth, GMinHeigth, GMaxWidth,
+                         GMaxHeigth, SMinWidth, SMaxWidth, SMaxHeigth);
+    FensterMenu.DrawGameMenu();
+    FensterMenu.DrawStatusMenu();
 
-	Snake_Player Spieler(FensterMenu.GetMindestX(), FensterMenu.GetMaximalX(),
-						 FensterMenu.GetMindestY(), FensterMenu.GetMaximalY());
-	
-	Futter Essen(FensterMenu.GetMindestX(), FensterMenu.GetMaximalX(),
-				 FensterMenu.GetMindestY(), FensterMenu.GetMaximalY());
+    // Create snake player object
+    Snake_Player Spieler(FensterMenu.GetMindestX(), FensterMenu.GetMaximalX(),
+                         FensterMenu.GetMindestY(), FensterMenu.GetMaximalY());
 
-	Spieler.Draw_Snake();
-	Essen.initializeFutterPos(Spieler.GetSnakePosX(), Spieler.GetSnakePosY());
-	Essen.DisplayFutter();
+    // Create food object
+    Futter Essen(FensterMenu.GetMindestX(), FensterMenu.GetMaximalX(),
+                 FensterMenu.GetMindestY(), FensterMenu.GetMaximalY());
 
-	bool go_up	  = false;
-	bool go_down  = true;
-	bool go_right = false;
-	bool go_left  = false;
-	
-	for (int i = 3; i != 0; --i)
-	{
-		gotoxy(GMinWidth, GMinHeigth-1);
-		std::cout << "Spiel startet in " << i << " Sekunden";
-		Sleep(1000);
-	}
+    Spieler.Draw_Snake();
+    Essen.initializeFutterPos(Spieler.GetSnakePosX(), Spieler.GetSnakePosY());
+    Essen.DisplayFutter();
 
-	gotoxy(GMinWidth, GMinHeigth-1);
-	std::cout << "                             ";
-	gotoxy(GMinWidth, GMinHeigth-1);
-	std::cout << "Go!";
+    bool go_up = false;
+    bool go_down = true;
+    bool go_right = false;
+    bool go_left = false;
 
-	while (true)
-	{
-		Spieler.Remove_Draw();
-		if (Spieler.kollision() == true)
-		{
-			clrscr(BG_BROWN);
-			textbackground(BG_BROWN);
-			textcolor(FG_WHITE);
+    for (int i = 3; i != 0; --i)
+    {
+        gotoxy(GMinWidth, GMinHeigth - 1);
+        std::cout << "Spiel startet in " << i << " Sekunden";
+        Sleep(1000);
+    }
 
-			FensterMenu.DrawStatusMenu();
+    gotoxy(GMinWidth, GMinHeigth - 1);
+    std::cout << "                             ";
+    gotoxy(GMinWidth, GMinHeigth - 1);
+    std::cout << "Go!";
 
-			gotoxy(30, 5);
-			std::cout << "Sie sich selbst berührt!" << std::endl;
-			break;
-		}
-		
-		if (Spieler.GetSnakePosY() == FensterMenu.GetMindestY() || Spieler.GetSnakePosY() == FensterMenu.GetMaximalY()||
-			     Spieler.GetSnakePosX() == FensterMenu.GetMaximalX() || Spieler.GetSnakePosX() == FensterMenu.GetMindestX())
-		{
-			clrscr(BG_BROWN);
-			textbackground(BG_BROWN);
-			textcolor(FG_WHITE);
+    while (true)
+    {
+        Spieler.Remove_Draw();
+        if (Spieler.kollision() == true)
+        {
+            clrscr(BG_BROWN);
+            textbackground(BG_BROWN);
+            textcolor(FG_WHITE);
 
-			gotoxy(30, 5);
-			std::cout << "Sie haben den Rand beruehrt!" << std::endl;
-			break;
-		}
+            FensterMenu.DrawStatusMenu();
 
+            gotoxy(30, 5);
+            std::cout << "Sie sich selbst berÃ¼hrt!" << std::endl;
+            break;
+        }
 
+        if (Spieler.GetSnakePosY() == FensterMenu.GetMindestY() || Spieler.GetSnakePosY() == FensterMenu.GetMaximalY() ||
+            Spieler.GetSnakePosX() == FensterMenu.GetMaximalX() || Spieler.GetSnakePosX() == FensterMenu.GetMindestX())
+        {
+            clrscr(BG_BROWN);
+            textbackground(BG_BROWN);
+            textcolor(FG_WHITE);
 
-		if (GetAsyncKeyState(VK_UP) && go_up == false && go_down == false)
-		{
-			Spieler.Gehe_Hoch();
-			Spieler.Draw_Snake();
+            gotoxy(30, 5);
+            std::cout << "Sie haben den Rand beruehrt!" << std::endl;
+            break;
+        }
 
-			go_up    = true;
-			go_down  = false;
-			go_right = false;
-			go_left  = false;
+        // Handle keyboard input for snake movement
+        if (GetAsyncKeyState(VK_UP) && go_up == false && go_down == false)
+        {
+            Spieler.Gehe_Hoch();
+            Spieler.Draw_Snake();
 
-		}
-		else if (GetAsyncKeyState(VK_DOWN) && go_down == false && go_up == false)
-		{
-			Spieler.Gehe_Runter();
-			Spieler.Draw_Snake();
+            go_up = true;
+            go_down = false;
+            go_right = false;
+            go_left = false;
+        }
+        else if (GetAsyncKeyState(VK_DOWN) && go_down == false && go_up == false)
+        {
+            Spieler.Gehe_Runter();
+            Spieler.Draw_Snake();
 
-			go_up    = false;
-			go_down  = true;
-			go_right = false;
-			go_left  = false;
-		}
-		else if (GetAsyncKeyState(VK_LEFT) && go_left == false && go_right == false)
-		{
-			Spieler.Gehe_Links();
-			Spieler.Draw_Snake();
+            go_up = false;
+            go_down = true;
+            go_right = false;
+            go_left = false;
+        }
+        else if (GetAsyncKeyState(VK_LEFT) && go_left == false && go_right == false)
+        {
+            Spieler.Gehe_Links();
+            Spieler.Draw_Snake();
 
-			go_up    = false;
-			go_down  = false;
-			go_right = false;
-			go_left  = true;
-		}
-		else if (GetAsyncKeyState(VK_RIGHT) && go_right == false && go_left == false)
-		{
-			Spieler.Gehe_Rechts();
-			Spieler.Draw_Snake();
+            go_up = false;
+            go_down = false;
+            go_right = false;
+            go_left = true;
+        }
+        else if (GetAsyncKeyState(VK_RIGHT) && go_right == false && go_left == false)
+        {
+            Spieler.Gehe_Rechts();
+            Spieler.Draw_Snake();
 
-			go_up    = false;
-			go_down  = false;
-			go_right = true;
-			go_left  = false;
-		}
-		else if (go_up)
-		{
-			Spieler.Gehe_Hoch();
-			Spieler.Draw_Snake();
-		}
-		else if (go_down)
-		{
-			Spieler.Gehe_Runter();
-			Spieler.Draw_Snake();
-		}
-		else if (go_left)
-		{
-			Spieler.Gehe_Links();
-			Spieler.Draw_Snake();
-		}
-		else if (go_right)
-		{
-			Spieler.Gehe_Rechts();
-			Spieler.Draw_Snake();
-		}
+            go_up = false;
+            go_down = false;
+            go_right = true;
+            go_left = false;
+        }
+        else if (go_up)
+        {
+            Spieler.Gehe_Hoch();
+            Spieler.Draw_Snake();
+        }
+        else if (go_down)
+        {
+            Spieler.Gehe_Runter();
+            Spieler.Draw_Snake();
+        }
+        else if (go_left)
+        {
+            Spieler.Gehe_Links();
+            Spieler.Draw_Snake();
+        }
+        else if (go_right)
+        {
+            Spieler.Gehe_Rechts();
+            Spieler.Draw_Snake();
+        }
 
+        // Check if the snake has eaten the food
+        if (Spieler.GetSnakePosX() == Essen.GetFutterXPos() && Spieler.GetSnakePosY() == Essen.GetFutterYPos())
+        {
+            Essen.RemoveFutter();
 
-		if (Spieler.GetSnakePosX() == Essen.GetFutterXPos() && Spieler.GetSnakePosY() == Essen.GetFutterYPos())
-		{
-			Essen.RemoveFutter();
+            if (go_down)
+                Spieler.Add_Snake(0, 1, 0, 0);
+            else if (go_up)
+                Spieler.Add_Snake(1, 0, 0, 0);
+            else if (go_right)
+                Spieler.Add_Snake(0, 0, 1, 0);
+            else if (go_left)
+                Spieler.Add_Snake(0, 0, 0, 1);
 
-			if (go_down)
-				Spieler.Add_Snake(0, 1, 0, 0);
-			else if (go_up)
-				Spieler.Add_Snake(1, 0, 0, 0);
-			else if (go_right)
-				Spieler.Add_Snake(0, 0, 1, 0);
-			else if (go_left)
-				Spieler.Add_Snake(0, 0, 0, 1);
+            FensterMenu.increaseGamePoints();
+            FensterMenu.DrawStatusMenu();
+            FensterMenu.DrawGameMenu();
 
-			FensterMenu.increaseGamePoints();
-			FensterMenu.DrawStatusMenu();
-			FensterMenu.DrawGameMenu();
+            Essen.initializeFutterPos(Spieler.GetSnakePosX(), Spieler.GetSnakePosY());
+            Essen.DisplayFutter();
+        }
 
-			Essen.initializeFutterPos(Spieler.GetSnakePosX(), Spieler.GetSnakePosY());
-			Essen.DisplayFutter();
-		}
+        Sleep(170); // Delay for game loop
+    }
 
-
-		Sleep(170);
-	}
-	
-	warten();
-	std::cin.get();
+    warten();
+    std::cin.get();
 }
 
 void Startseite()
 {
-	std::string tastendruck = "Druecke eine Taste um das Spiel zu starten...";
+    std::string tastendruck = "Druecke eine Taste um das Spiel zu starten...";
 
-	clrscr(BG_BLACK);
-	textcolor(ic::FG_LIGHTGREEN);
+    clrscr(BG_BLACK); // Clear the screen with a black background
+    textcolor(ic::FG_LIGHTGREEN); // Set text color to light green
 
-	gotoxy(22, 2);
-	std::cout << "pEscanor Snake Game Test";
+    gotoxy(22, 2);
+    std::cout << "pEscanor Snake Game Test";
 
-	short GMIX = 10; 
-	short GMIY = 9; 
-	short GMAY = 18;
-	short GMAX = 40;
+    short GMIX = 10;
+    short GMIY = 9;
+    short GMAY = 18;
+    short GMAX = 40;
 
-	Snake_Player StartMenuSnake(GMIX, GMAX, GMIY, GMAY);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
-	StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    // Create snake for the start menu
+    Snake_Player StartMenuSnake(GMIX, GMAX, GMIY, GMAY);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
+    StartMenuSnake.Add_Snake(1, 0, 0, 0);
 
-	gotoxy(GMIX, 22);
-	std::cout << tastendruck;
+    gotoxy(GMIX, 22);
+    std::cout << tastendruck;
 
-	textcolor(FG_LIGHTBLUE);
+    textcolor(FG_LIGHTBLUE);
 
-	while (true)
-	{
-		for (int i = GMIY; i != GMAY; ++i)
-		{
-			StartMenuSnake.Remove_Draw();
-			StartMenuSnake.Gehe_Runter();
-			StartMenuSnake.Draw_Snake();
+    while (true)
+    {
+        // Animate the snake in the start menu
+        for (int i = GMIY; i != GMAY; ++i)
+        {
+            StartMenuSnake.Remove_Draw();
+            StartMenuSnake.Gehe_Runter();
+            StartMenuSnake.Draw_Snake();
 
-			if (_kbhit()) // Nur wenn auch eine Taste gedrückt ist 
-			{
-				warten();
-				return;
-			}
-			Sleep(20);
-		}
+            if (_kbhit()) // Check if a key is pressed
+            {
+                warten();
+                return; // Return from the function to start the game
+            }
+            Sleep(20); // Delay for animation
+        }
 
-		for (int i = GMIX; i != GMAX; ++i)
-		{
-			StartMenuSnake.Remove_Draw();
-			StartMenuSnake.Gehe_Rechts();
-			StartMenuSnake.Draw_Snake();
+        for (int i = GMIX; i != GMAX; ++i)
+        {
+            StartMenuSnake.Remove_Draw();
+            StartMenuSnake.Gehe_Rechts();
+            StartMenuSnake.Draw_Snake();
 
-			if (_kbhit()) // Nur wenn auch eine Taste gedrückt ist 
-			{
-				warten();
-				return;
-			}
+            if (_kbhit()) // Check if a key is pressed
+            {
+                warten();
+                return; // Return from the function to start the game
+            }
 
-			Sleep(20);
-		}
+            Sleep(20); // Delay for animation
+        }
 
-		for (int i = GMAY; i != GMIY; --i)
-		{
-			StartMenuSnake.Remove_Draw();
-			StartMenuSnake.Gehe_Hoch();
-			StartMenuSnake.Draw_Snake();
+        for (int i = GMAY; i != GMIY; --i)
+        {
+            StartMenuSnake.Remove_Draw();
+            StartMenuSnake.Gehe_Hoch();
+            StartMenuSnake.Draw_Snake();
 
-			if (_kbhit()) // Nur wenn auch eine Taste gedrückt ist 
-			{
-				warten();
-				return;
-			}
-			Sleep(20);
-		}
+            if (_kbhit()) // Check if a key is pressed
+            {
+                warten();
+                return; // Return from the function to start the game
+            }
+            Sleep(20); // Delay for animation
+        }
 
-		for (int i = GMAX; i != GMIX; --i)
-		{
-			StartMenuSnake.Remove_Draw();
-			StartMenuSnake.Gehe_Links();
-			StartMenuSnake.Draw_Snake();
+        for (int i = GMAX; i != GMIX; --i)
+        {
+            StartMenuSnake.Remove_Draw();
+            StartMenuSnake.Gehe_Links();
+            StartMenuSnake.Draw_Snake();
 
-			if (_kbhit()) // Nur wenn auch eine Taste gedrückt ist 
-			{
-				warten();
-				return;
-			}
-			Sleep(20);
-
-		}
-
-
-	}
+            if (_kbhit()) // Check if a key is pressed
+            {
+                warten();
+                return; // Return from the function to start the game
+            }
+            Sleep(20); // Delay for animation
+        }
+    }
 }
-
-
 
 #endif
